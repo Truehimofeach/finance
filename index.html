@@ -10,11 +10,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,sans-serif;background:#efece5;color:#1a1a1a;min-height:100vh}
-nav{display:flex;padding:6px 10px;border-bottom:1px solid #d4cdbd;background:#fff;position:sticky;top:0;z-index:100;overflow-x:auto;gap:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none;max-width:880px;margin:0 auto;box-shadow:0 1px 0 #fff,1px 0 0 #fff,-1px 0 0 #fff}
-nav::-webkit-scrollbar{display:none}
-body{display:flex;flex-direction:column;align-items:center}
-nav,#content{width:100%;max-width:880px}
+body{font-family:system-ui,sans-serif;background:#efece5;color:#1a1a1a;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+#topbar{width:100%;position:sticky;top:0;z-index:100;background:#fff}
+nav{display:flex;justify-content:center;border-bottom:1px solid #d4cdbd}
+.nav-inner{display:flex;max-width:880px;width:100%;padding:6px 10px;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.nav-inner::-webkit-scrollbar{display:none}
+.subnav{display:flex;justify-content:center;border-bottom:1px solid #d4cdbd}
+.subnav-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:880px;width:100%;padding:8px 10px;gap:8px}
+#content{width:100%;max-width:880px}
 .tab{padding:10px 16px;font-size:12px;font-weight:600;letter-spacing:.02em;color:#847e72;cursor:pointer;white-space:nowrap;transition:all .2s;border-radius:20px;display:flex;align-items:center;gap:6px;flex-shrink:0;user-select:none}
 .tab .tab-ic{display:inline-flex;line-height:1}
 .tab .tab-ic svg{width:15px;height:15px;flex-shrink:0}
@@ -84,7 +87,7 @@ nav,#content{width:100%;max-width:880px}
 .fw{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .fw-f{background:#f0f9f4;border:1px solid #c8e8d4;border-radius:8px;padding:8px 10px}
 .fw-w{background:#fdf9f0;border:1px solid #e8ddc8;border-radius:8px;padding:8px 10px}
-.drop{border:2px dashed #d4cdbd;border-radius:10px;padding:24px;text-align:center;cursor:pointer;background:#faf9f7;transition:all .2s;margin-bottom:10px}
+.drop{border:1px dashed #d4cdbd;border-radius:8px;padding:12px;text-align:center;cursor:pointer;background:#faf9f7;transition:all .2s;margin-bottom:10px}
 .drop:hover,.drop.drag{border-color:#8B6914;background:#fffdf8}
 .drop input{display:none}
 .sbox{margin-top:10px;font-size:12px;padding:8px 12px;border-radius:8px;display:none}
@@ -158,14 +161,17 @@ nav,#content{width:100%;max-width:880px}
 </style>
 </head>
 <body>
-<nav>
+<header id="topbar">
+<nav><div class="nav-inner">
   <div class="tab active" data-tab="overview"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="14"/><line x1="12" y1="20" x2="12" y2="8"/><line x1="18" y1="20" x2="18" y2="4"/></svg></span>Огляд</div>
   <div class="tab" data-tab="current"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Поточний рік</div>
   <div class="tab" data-tab="portfolio"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>Портфель</div>
   <div class="tab" data-tab="invest"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>Інвестиції</div>
   <div class="tab" data-tab="analysis"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></span>Аналіз</div>
   <div class="tab" data-tab="settings"><span class="tab-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span>Дані</div>
-</nav>
+</div></nav>
+<div id="subnav" class="subnav" hidden><div class="subnav-inner" id="subnav-inner"></div></div>
+</header>
 <div id="content"><div style="color:#8f8a7f;padding:40px;text-align:center">Завантаження...</div></div>
 
 <script>
@@ -353,6 +359,8 @@ function load(){
 }
 function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
 function mk(id,cfg){dc(id);const c=document.getElementById(id);if(c)CH[id]=new Chart(c,cfg);}
+function setSubnav(html){const sn=document.getElementById('subnav'),sni=document.getElementById('subnav-inner');if(sni)sni.innerHTML=html;if(sn)sn.hidden=false;}
+function clearSubnav(){const sn=document.getElementById('subnav'),sni=document.getElementById('subnav-inner');if(sni)sni.innerHTML='';if(sn)sn.hidden=true;}
 const fmt=n=>Math.round(n).toLocaleString('uk-UA');
 const fmtU=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 const sgn=n=>n>=0?'+':'';
@@ -401,13 +409,9 @@ function renderOverview(){
     return set;
   }
   function build(){
+    setSubnav(`<span style="font-size:11px;color:#8f8a7f">Валюта</span><div class="toggle-btn"><button class="toggle-opt ${ovMode==='uah'?'on':''}" id="ov-mode-uah">${BS}</button><button class="toggle-opt ${ovMode==='usd'?'on':''}" id="ov-mode-usd">$ (курс періоду)</button></div>`);
     document.getElementById('content').innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
-      <div class="st" style="margin:0">Доходи, витрати та баланс</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="toggle-btn"><button class="toggle-opt ${ovMode==='uah'?'on':''}" id="ov-mode-uah">${BS}</button><button class="toggle-opt ${ovMode==='usd'?'on':''}" id="ov-mode-usd">$ (курс періоду)</button></div>
-      </div>
-    </div>
+    <div class="st" style="margin-bottom:2px">Доходи, витрати та баланс</div>
     <div id="ov-rate-status" style="font-size:11px;color:#8f8a7f;margin-bottom:10px;min-height:14px"></div>
     <div class="cc"><div class="ct">Доходи vs Витрати</div><div class="chart-scroll"><div style="position:relative;height:200px;min-width:${Math.max(380,years.length*62)}px"><canvas id="c1"></canvas></div></div><div class="lr"><span class="li"><span style="width:12px;height:12px;background:rgba(42,154,90,.6);border-radius:2px;display:inline-block"></span>Доходи</span><span class="li"><span style="width:12px;height:12px;background:rgba(192,74,58,.6);border-radius:2px;display:inline-block"></span>Витрати</span></div></div>
     <div class="cc"><div class="ct">Баланс по роках</div><div class="chart-scroll"><div style="position:relative;height:160px;min-width:${Math.max(380,years.length*62)}px"><canvas id="c2"></canvas></div></div></div>
@@ -557,7 +561,8 @@ function renderCurrentYear(){
     document.getElementById('bsv').onclick=()=>{const yr=+document.getElementById('fy').value;const mi=+document.getElementById('fm').value;const inc=parseFloat(document.getElementById('fi').value)||null;const exp=parseFloat(document.getElementById('fe').value)||null;if(!DB.monthly[yr])DB.monthly[yr]={inc:Array(12).fill(null),exp:Array(12).fill(null)};DB.monthly[yr].inc[mi]=inc;DB.monthly[yr].exp[mi]=exp;sv();if(yr===selY)build();};
     document.getElementById('bcl').onclick=()=>{document.getElementById('fi').value='';document.getElementById('fe').value='';document.getElementById('bdl').style.display='none';document.getElementById('cyt').textContent='Додати / редагувати місяць';document.getElementById('cyf').classList.remove('editing');};
   }
-  document.getElementById('content').innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div class="st" style="margin:0">Поточний рік</div><div class="pills" id="cyp">${gYears().map(y=>`<div class="pill ${y==selY?'on':''}" data-y="${y}" style="border-color:${y==selY?PAL[y]:'#cec7b8'};color:${y==selY?PAL[y]:'#8f8a7f'}">${y}</div>`).join('')}</div></div><div id="cy-body"></div>`;
+  document.getElementById('content').innerHTML=`<div class="st">Поточний рік</div><div id="cy-body"></div>`;
+  setSubnav(`<span style="font-size:11px;color:#8f8a7f">Рік</span><div class="pills" id="cyp">${gYears().map(y=>`<div class="pill ${y==selY?'on':''}" data-y="${y}" style="border-color:${y==selY?PAL[y]:'#cec7b8'};color:${y==selY?PAL[y]:'#8f8a7f'}">${y}</div>`).join('')}</div>`);
   document.querySelectorAll('#cyp .pill').forEach(p=>{p.onclick=()=>{selY=+p.dataset.y;tOpen=false;document.querySelectorAll('#cyp .pill').forEach(pp=>{const py=+pp.dataset.y;pp.classList.toggle('on',py==selY);pp.style.borderColor=py==selY?PAL[py]:'#cec7b8';pp.style.color=py==selY?PAL[py]:'#8f8a7f';});build();};});
   build();
 }
@@ -588,8 +593,8 @@ function renderPortfolio(){
       const rSum=(isR(s)||s.type==='flex')?`<div class="fw"><div class="fw-f"><div style="font-size:10px;color:#1a7a4a;font-weight:600;letter-spacing:.04em;text-transform:uppercase">Вільні</div><div style="font-size:14px;font-weight:300;color:#1a7a4a">${fmt(Math.round(c.freeUah))} ${BS}</div></div><div class="fw-w"><div style="font-size:10px;color:#8B6914;font-weight:600;letter-spacing:.04em;text-transform:uppercase">В роботі</div><div style="font-size:14px;font-weight:300;color:#8B6914">${fmt(Math.round(c.inWorkUah))} ${BS}</div></div></div>`:'';
       const rLeg='';
       sh+=`<div class="ps ${si===ei?'ae':''}"><div class="ps-hd"><span style="font-size:12px;color:#8f8a7f">${s.date}</span><span style="font-size:16px;font-weight:300;color:#8B6914">${fmt(total)} ${BS}</span></div>${rSum}<div style="position:relative;height:160px;min-height:140px"><canvas id="pie${si}"></canvas></div><div style="margin-top:10px">${sBars(s)}</div>${rLeg}<div class="ps-acts"><button class="btn btng" style="font-size:11px;padding:4px 10px" id="es${si}">Редагувати</button><button class="btn btnr2" style="font-size:11px;padding:4px 10px" id="ds${si}">Видалити</button></div></div>`;});
+    setSubnav(`<span style="font-size:11px;color:#8f8a7f">Відображення</span><div class="toggle-btn"><button class="toggle-opt ${mode==='uah'?'on':''}" id="mu">${BS}</button><button class="toggle-opt ${mode==='native'?'on':''}" id="mn">За валютою</button></div>`);
     document.getElementById('pb').innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px"><span style="font-size:11px;color:#8f8a7f">Відображення:</span><div class="toggle-btn"><button class="toggle-opt ${mode==='uah'?'on':''}" id="mu">${BS}</button><button class="toggle-opt ${mode==='native'?'on':''}" id="mn">За валютою</button></div></div>
     <div class="g2" id="sg">${sh}</div>
     ${snaps.length>1?`<div class="cc"><div class="ct">Загальна вартість</div><div style="position:relative;height:130px"><canvas id="cpt"></canvas></div></div>
     <div class="cc"><div class="ct">Крок росту</div><div style="position:relative;height:130px"><canvas id="cpt-step"></canvas></div></div>`:''}
@@ -799,7 +804,7 @@ function renderInvest(){
     <div class="cards2" style="margin-bottom:12px">
       <div class="card"><div class="cl">з них Дивіденди/Купони <span style="color:#a19c90;font-weight:400">(реалізовано)</span></div><div class="cv pos">${divBase?'+'+divDisp:'—'}</div><div class="cs">${divPct?divPct+'% — реальні гроші':''}</div></div>
       <div class="card"><div class="cl">з них Капіталізація <span style="color:#a19c90;font-weight:400">(нереалізовано)</span></div><div class="cv ${capBase>=0?'':'neg'}" style="${capBase?'':'color:#8f8a7f'}">${filtered.some(r=>r.type==='appreciation')?(capBase>=0?'+':'')+capDisp:'немає записів'}</div><div class="cs">${capPct&&filtered.some(r=>r.type==='appreciation')?capPct+'%':''}</div></div>
-    </div>${notReinvBase>0.01?`<div style="margin-bottom:12px"><div class="card"><div class="cl">Виведено / не реінвестовано <span style="color:#a19c90;font-weight:400">(в прибутку, не в балансі)</span></div><div class="cv" style="color:#8a6fc4">${notReinvDisp}</div></div></div>`:''}`;
+    </div>${notReinvBase>0.01?`<div class="cards3" style="margin-bottom:12px"><div class="card"><div class="cl">Виведено / не реінвестовано <span style="color:#a19c90;font-weight:400">(в прибутку, не в балансі)</span></div><div class="cv" style="color:#8a6fc4">${notReinvDisp}</div></div></div>`:''}`;
 
     const filterPillsHtml=visibleDescs.map(d=>{
       const isArch=archived.includes(d);
@@ -812,16 +817,14 @@ function renderInvest(){
       </span>`;
     }).join(' ');
 
+    setSubnav(`<div style="display:flex;flex-wrap:wrap;gap:6px" id="desc-pills">${filterPillsHtml}</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="toggle-btn"><button class="toggle-opt ${invMode==='base'?'on':''}" id="inv-mode-base">${BS}</button><button class="toggle-opt ${invMode==='native'?'on':''}" id="inv-mode-native">За валютою</button></div>
+        <label style="font-size:11px;color:#8f8a7f;display:flex;align-items:center;gap:5px;white-space:nowrap"><input type="checkbox" id="chk-archived" ${showArchived?'checked':''}> архівні</label>
+      </div>`);
     document.getElementById('content').innerHTML=`
     <div class="st">Інвестиції</div>
     <div class="cc">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
-        <div style="display:flex;flex-wrap:wrap;gap:6px" id="desc-pills">${filterPillsHtml}</div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <div class="toggle-btn"><button class="toggle-opt ${invMode==='base'?'on':''}" id="inv-mode-base">${BS}</button><button class="toggle-opt ${invMode==='native'?'on':''}" id="inv-mode-native">За валютою</button></div>
-          <label style="font-size:11px;color:#8f8a7f;display:flex;align-items:center;gap:5px;white-space:nowrap"><input type="checkbox" id="chk-archived" ${showArchived?'checked':''}> показати архівні</label>
-        </div>
-      </div>
       ${metricsHtml}
       <div class="chart-scroll"><div style="position:relative;height:200px;min-width:${Math.max(420,filtered.length*55)}px"><canvas id="civchart"></canvas></div></div>
     </div>
@@ -1439,7 +1442,7 @@ function renderAnalysis(){
   </div>
 
   <div class="st">Тренд</div>
-  <div style="margin-bottom:12px">
+  <div class="cards3" style="margin-bottom:12px">
     <div class="card"><div class="cl">Середня зміна доходу рік до року</div><div class="cv ${avgYoy===null?'':avgYoy>=0?'pos':'neg'}">${avgYoy===null?'недостатньо даних':(avgYoy>=0?'+':'')+avgYoy.toFixed(1)+'%'}</div><div class="cs">${avgYoy===null?'':'в середньому за '+yoyChanges.length+' '+(yoyChanges.length===1?'рік':'роки(-ів)')}</div></div>
   </div>
   `;
@@ -1506,8 +1509,8 @@ function renderSettings(){
     <p style="font-size:12px;color:#8f8a7f;margin-bottom:12px">Виберіть раніше збережений JSON-файл. Поточні дані будуть замінені.</p>
     <div class="drop" id="drp">
       <input type="file" id="finp" accept=".json">
-      <div style="font-size:13px;color:#888;margin-bottom:4px">Натисни або перетягни .json файл сюди</div>
-      <div style="font-size:11px;color:#a19c90">Тільки файли .json</div>
+      <button class="btn btnp" type="button" style="pointer-events:none">Вибрати файл</button>
+      <div style="font-size:11px;color:#a19c90;margin-top:8px">або перетягни .json сюди</div>
     </div>
     <div class="sbox" id="ist"></div>
   </div>
@@ -1597,7 +1600,7 @@ function renderSettings(){
   document.getElementById('brst').onclick=()=>{if(confirm('Скинути ВСІ дані? Цю дію неможливо скасувати.')){DB=migrate({});updateBS();try{localStorage.setItem(KEY,JSON.stringify(DB));}catch(e){}renderTab(activeTab);}};
 }
 
-function renderTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab==tab));if(tab==='overview')renderOverview();else if(tab==='current')renderCurrentYear();else if(tab==='portfolio')renderPortfolio();else if(tab==='invest')renderInvest();else if(tab==='analysis')renderAnalysis();else if(tab==='settings')renderSettings();}
+function renderTab(tab){activeTab=tab;document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab==tab));clearSubnav();if(tab==='overview')renderOverview();else if(tab==='current')renderCurrentYear();else if(tab==='portfolio')renderPortfolio();else if(tab==='invest')renderInvest();else if(tab==='analysis')renderAnalysis();else if(tab==='settings')renderSettings();}
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>renderTab(t.dataset.tab));
 
 // ВАЖЛИВО: Дані зберігаються в localStorage браузера (ключ "fin_v3")
